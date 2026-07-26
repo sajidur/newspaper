@@ -1,0 +1,6 @@
+{
+  "name": "দৈনিক কথা প্রকাশ পত্রিকা।",
+  "description": "একটি আধুনিক বাংলা ডিজিটাল সংবাদমাধ্যম ও পাঠক পোর্টাল যা স্বয়ংক্রিয় নিউজলেটার, এআই মন্তব্য সংযম এবং পরিচালনা ড্যাশবোর্ড সহ সম্পন্ন।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
