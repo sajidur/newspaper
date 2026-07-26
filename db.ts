@@ -468,12 +468,17 @@ export async function getArticles(): Promise<Article[]> {
     const [rows]: any = await mysqlPool.query("SELECT * FROM `articles` ORDER BY `date` DESC");
     return rows.map((r: any) => ({
       ...r,
+      author: (r.author && r.author.includes('অটো-সংগ্রাহক')) ? 'নিজস্ব প্রতিবেদক' : (r.author || 'নিজস্ব প্রতিবেদক'),
       reads: parseInt(r.reads || 0),
       likes: parseInt(r.likes || 0),
       views: parseInt(r.views || 0)
     }));
   } else {
-    return loadJsonDatabase().articles;
+    const articles = loadJsonDatabase().articles;
+    return articles.map((a: Article) => ({
+      ...a,
+      author: (a.author && a.author.includes('অটো-সংগ্রাহক')) ? 'নিজস্ব প্রতিবেদক' : (a.author || 'নিজস্ব প্রতিবেদক')
+    }));
   }
 }
 
@@ -501,14 +506,17 @@ export async function searchArticles(keywords: string): Promise<Article[]> {
 }
 
 export async function saveArticle(a: Article): Promise<void> {
+  const sanitizedAuthor = (a.author && a.author.includes('অটো-সংগ্রাহক')) ? 'নিজস্ব প্রতিবেদক' : (a.author || 'নিজস্ব প্রতিবেদক');
+  const articleToSave = { ...a, author: sanitizedAuthor };
+
   if (isMysqlConnected && mysqlPool) {
     await mysqlPool.query(
       "INSERT INTO `articles` (`id`, `title`, `subtitle`, `category`, `content`, `author`, `date`, `image`, `reads`, `likes`, `views`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [a.id, a.title, a.subtitle, a.category, a.content, a.author, new Date(a.date), a.image, a.reads || 0, a.likes || 0, a.views || 0, a.status]
+      [articleToSave.id, articleToSave.title, articleToSave.subtitle, articleToSave.category, articleToSave.content, articleToSave.author, new Date(articleToSave.date), articleToSave.image, articleToSave.reads || 0, articleToSave.likes || 0, articleToSave.views || 0, articleToSave.status]
     );
   } else {
     const db = loadJsonDatabase();
-    db.articles.unshift(a);
+    db.articles.unshift(articleToSave);
     saveJsonDatabase(db);
   }
 }

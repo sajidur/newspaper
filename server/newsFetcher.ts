@@ -367,7 +367,7 @@ export async function runNewsSync(
         subtitle: item.subtitle,
         category: item.category,
         content: item.content,
-        author: `অটো-সংগ্রাহক (${item.sourceName})`,
+        author: "নিজস্ব প্রতিবেদক",
         date: new Date().toISOString(),
         image: item.image || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80",
         reads: Math.floor(Math.random() * 50) + 10,
